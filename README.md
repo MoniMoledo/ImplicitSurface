@@ -1,4 +1,4 @@
-# H1 Computer Graphics Project
+# Computer Graphics Project
 
 Using the base code given in class, create a graphic application to visualize implicit surfaces using "Marching Tetrahedra" algorithm.
 
