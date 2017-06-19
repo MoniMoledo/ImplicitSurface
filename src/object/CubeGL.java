@@ -1,4 +1,4 @@
-package cubo;
+package object;
 
 import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;

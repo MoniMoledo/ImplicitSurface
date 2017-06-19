@@ -1,4 +1,4 @@
-package cubo;
+package object;
 
 /**
  *
@@ -17,6 +17,8 @@ public class Main {
 
     // Creates a new cube
     private final CubeGL cube = new CubeGL();
+    //Creates a new Piramide
+    private final PiramideGL piramide = new PiramideGL();
 
     // Animation:
     private float  currentAngle = 0.0f;
@@ -88,24 +90,35 @@ public class Main {
     public void run() {
         // Creates the vertex array object. 
         // Must be performed before shaders compilation.
-        cube.fillVAOs();
-        cube.loadShaders();
+//        cube.fillVAOs();
+//        cube.loadShaders();
+          piramide.fillVAOs();
+          piramide.loadShaders();
        
         // Model Matrix setup
-        scaleMatrix.m11 = 0.5f;
-        scaleMatrix.m22 = 0.5f;
-        scaleMatrix.m33 = 0.5f;
+        scaleMatrix.m11 = 1.5f;
+        scaleMatrix.m22 = 1.5f;
+        scaleMatrix.m33 = 1.5f;
         
         // light setup
-        cube.setVector("lightPos"    , lightPos);
-        cube.setVector("ambientColor", ambientColor);
-        cube.setVector("diffuseColor", diffuseColor);
-        cube.setVector("speclarColor", speclarColor);
+//        cube.setVector("lightPos"    , lightPos);
+//        cube.setVector("ambientColor", ambientColor);
+//        cube.setVector("diffuseColor", diffuseColor);
+//        cube.setVector("speclarColor", speclarColor);
+        piramide.setVector("lightPos"    , lightPos);
+        piramide.setVector("ambientColor", ambientColor);
+        piramide.setVector("diffuseColor", diffuseColor);
+        piramide.setVector("speclarColor", speclarColor);
         
-        cube.setFloat("kA", kA);
-        cube.setFloat("kD", kD);
-        cube.setFloat("kS", kS);
-        cube.setFloat("sN", sN);
+//        cube.setFloat("kA", kA);
+//        cube.setFloat("kD", kD);
+//        cube.setFloat("kS", kS);
+//        cube.setFloat("sN", sN);
+        piramide.setFloat("kA", kA);
+        piramide.setFloat("kD", kD);
+        piramide.setFloat("kS", kS);
+        piramide.setFloat("sN", sN);
+        
         
         while (Display.isCloseRequested() == false) {
 
@@ -128,10 +141,15 @@ public class Main {
             modelMatrix.multiply(rotationMatrixY);
             modelMatrix.multiply(scaleMatrix);
                         
-            cube.setMatrix("modelmatrix", modelMatrix);
-            cube.setMatrix("viewmatrix" , viewMatrix);
-            cube.setMatrix("projection" , projMatrix);
-            cube.render();
+//            cube.setMatrix("modelmatrix", modelMatrix);
+//            cube.setMatrix("viewmatrix" , viewMatrix);
+//            cube.setMatrix("projection" , projMatrix);
+//            cube.render();
+            piramide.setMatrix("modelmatrix", modelMatrix);
+            piramide.setMatrix("viewmatrix" , viewMatrix);
+            piramide.setMatrix("projection" , projMatrix);
+            piramide.render();
+            
 
             // check for errors
             if (GL11.GL_NO_ERROR != GL11.glGetError()) {

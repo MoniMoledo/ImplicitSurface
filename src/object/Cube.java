@@ -1,4 +1,4 @@
-package cubo;
+package object;
 
 import java.util.ArrayList;
 import util.math.Vector4f;
