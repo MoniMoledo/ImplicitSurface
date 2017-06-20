@@ -23,7 +23,7 @@ public class Piramide {
         positions = new ArrayList<>(ntriangles*3);
         colors    = new ArrayList<>(ntriangles*3);
         
-        Vector4f p1 = new Vector4f(0.0f,  0.7f, 0.0f, 1.0f);
+        Vector4f p1 = new Vector4f(0.0f,  0.6f, 0.0f, 1.0f);
         Vector4f p2 = new Vector4f(-0.3f, 0.0f, 0.3f, 1.0f);
         Vector4f p3 = new Vector4f( 0.3f, 0.0f, 0.3f, 1.0f);
         Vector4f p4 = new Vector4f(-0.3f, 0.0f, -0.3f, 1.0f) ;
