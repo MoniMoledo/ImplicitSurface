@@ -54,11 +54,16 @@ public class Main {
     private final Matrix4f viewMatrix = new Matrix4f();
     private final Matrix4f projMatrix = new Matrix4f();
 
-    public enum Rotation {
+    public enum RotationType {
         X, Y, Z
     }
 
-    private Rotation currentRotation = Rotation.X;
+    public enum ProjectionType {
+        O, P
+    }
+
+    private RotationType currentRotation = RotationType.X;
+    private ProjectionType currentProjection = ProjectionType.P;
 
     /**
      * General initialization stuff for OpenGL
@@ -99,14 +104,14 @@ public class Main {
         // Must be performed before shaders compilation.
         graphicObject.fillVAOs();
         graphicObject.loadShaders();
-        
+
         // Model Matrix setup
-        scaleMatrix.m11 = 1.0f;
-        scaleMatrix.m22 = 1.0f;
-        scaleMatrix.m33 = 1.0f;
+        scaleMatrix.m11 = 1.5f;
+        scaleMatrix.m22 = 1.5f;
+        scaleMatrix.m33 = 1.5f;
 
         // light setup
-        graphicObject.setVector("lightPos"    , lightPos);
+        graphicObject.setVector("lightPos", lightPos);
         graphicObject.setVector("ambientColor", ambientColor);
         graphicObject.setVector("diffuseColor", diffuseColor);
         graphicObject.setVector("speclarColor", speclarColor);
@@ -122,20 +127,20 @@ public class Main {
             GL11.glEnable(GL11.GL_CULL_FACE);
             GL11.glCullFace(GL11.GL_BACK);
 
-            // Projection and View Matrix Setup
-            projMatrix.setTo(proj.perspective());
-            viewMatrix.setTo(cam.viewMatrix());
-
             currentAngle += 0.01f;
 
-            currentRotation = getRotationInput();
-           
+            setCurrentRotationAndProjectionFromInput();
+
+            // Projection and View Matrix Setup
+            projMatrix.setTo(getProjectionMatrix());
+            viewMatrix.setTo(cam.viewMatrix());
+
             modelMatrix = getModelMatrix();
-            
+
             modelMatrix.multiply(scaleMatrix);
             graphicObject.setMatrix("modelmatrix", modelMatrix);
-            graphicObject.setMatrix("viewmatrix" , viewMatrix);
-            graphicObject.setMatrix("projection" , projMatrix);
+            graphicObject.setMatrix("viewmatrix", viewMatrix);
+            graphicObject.setMatrix("projection", projMatrix);
             graphicObject.render();
 
             // check for errors
@@ -152,7 +157,7 @@ public class Main {
         Display.destroy();
     }
 
-    private Rotation getRotationInput() {
+    private void setCurrentRotationAndProjectionFromInput() {
         if (Keyboard.next()) {
             if (Keyboard.getEventKeyState()) {
                 int input = Keyboard.getEventKey();
@@ -161,17 +166,36 @@ public class Main {
                     case Keyboard.KEY_L:
                     case Keyboard.KEY_RIGHT:
                     case Keyboard.KEY_LEFT:
-                        return Rotation.Y;
-                        
+                        currentRotation = RotationType.Y;
+                        break;
+
                     case Keyboard.KEY_C:
                     case Keyboard.KEY_B:
                     case Keyboard.KEY_DOWN:
                     case Keyboard.KEY_UP:
-                        return Rotation.X;
+                        currentRotation = RotationType.X;
+                        break;
+                    case Keyboard.KEY_O:
+                        currentProjection = ProjectionType.O;
+                        break;
+                    case Keyboard.KEY_P:
+                        currentProjection = ProjectionType.P;
+                        break;
                 }
             }
         }
-        return currentRotation;
+    }
+
+    private ProjectionType getProjectionInput() {
+        // if (Keyboard.next()) {
+        if (Keyboard.getEventKeyState()) {
+            int input = Keyboard.getEventKey();
+            switch (input) {
+
+            }
+        }
+        // }
+        return currentProjection;
     }
 
     private Matrix4f getRotationMatrixX(float angle) {
@@ -210,18 +234,30 @@ public class Main {
         Matrix4f matrix = new Matrix4f();
         matrix.setToIdentity();
         Matrix4f rotationMatrix;
-        
+
         switch (currentRotation) {
-                case X:
-                    rotationMatrix = getRotationMatrixX(currentAngle);
-                    break;
-                case Y:
-                     rotationMatrix = getRotationMatrixY(currentAngle);
-                    break;
-                default: rotationMatrix = getRotationMatrixX(currentAngle);
-            }
+            case X:
+                rotationMatrix = getRotationMatrixX(currentAngle);
+                break;
+            case Y:
+                rotationMatrix = getRotationMatrixY(currentAngle);
+                break;
+            default:
+                rotationMatrix = getRotationMatrixX(currentAngle);
+        }
         matrix.multiply(rotationMatrix);
         return matrix;
+    }
+
+    private Matrix4f getProjectionMatrix() {
+
+        switch (currentProjection) {
+            case O:
+                return proj.orthogonal();
+            case P:
+                return proj.perspective();
+        }
+        return proj.perspective();
     }
 
     /**
