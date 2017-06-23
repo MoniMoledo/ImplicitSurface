@@ -9,6 +9,7 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.input.Keyboard;
 import util.camera.Camera;
+import util.marchingtetrahedra.MarchingTetrahedra;
 import util.math.FastMath;
 import util.math.Matrix4f;
 import util.math.Vector3f;
@@ -19,7 +20,8 @@ public class Main {
     // Creates a new cube
     //private final CubeGL graphicObject = new CubeGL();
     //Creates a new Piramide
-    private final PiramideGL graphicObject = new PiramideGL();
+    //private final PiramideGL graphicObject = new PiramideGL();
+    private final SurfaceGL graphicObject = new SurfaceGL();
 
     // Animation:
     private float currentAngle = 0.0f;
@@ -99,9 +101,10 @@ public class Main {
         GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     }
 
-    public void run() {
+    public void run() throws Exception {
         // Creates the vertex array object. 
         // Must be performed before shaders compilation.
+        MarchingTetrahedra.generateTetrahedron(graphicObject, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 120);
         graphicObject.fillVAOs();
         graphicObject.loadShaders();
 
@@ -266,7 +269,7 @@ public class Main {
      * @param args
      * @throws org.lwjgl.LWJGLException
      */
-    public static void main(String[] args) throws LWJGLException {
+    public static void main(String[] args) throws LWJGLException, Exception {
         Main example = new Main();
         example.initGl();
         example.run();
