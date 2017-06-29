@@ -50,21 +50,20 @@ public class Main {
 
     // Model Matrix:
     private final Matrix4f scaleMatrix = new Matrix4f();
-
     // Final Matrix
     private Matrix4f modelMatrix = new Matrix4f();
     private final Matrix4f viewMatrix = new Matrix4f();
     private final Matrix4f projMatrix = new Matrix4f();
 
     public enum RotationType {
-        X, Y, Z
+        LEFT, RIGHT, UP, DOWN
     }
 
     public enum ProjectionType {
         O, P
     }
 
-    private RotationType currentRotation = RotationType.X;
+    private RotationType currentRotation = RotationType.RIGHT;
     private ProjectionType currentProjection = ProjectionType.P;
 
     /**
@@ -104,15 +103,14 @@ public class Main {
     public void run() throws Exception {
         // Creates the vertex array object. 
         // Must be performed before shaders compilation.
-        MarchingTetrahedra.generateTetrahedron(graphicObject, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 120);
+        MarchingTetrahedra.generateTetrahedron(graphicObject, -1, 1, -1, 1, -1, 1, 120);
         graphicObject.fillVAOs();
         graphicObject.loadShaders();
 
         // Model Matrix setup
-        scaleMatrix.m11 = 1.5f;
-        scaleMatrix.m22 = 1.5f;
-        scaleMatrix.m33 = 1.5f;
-
+        scaleMatrix.m11 = 0.5f;
+        scaleMatrix.m22 = 0.5f;
+        scaleMatrix.m33 = 0.5f;
         // light setup
         graphicObject.setVector("lightPos", lightPos);
         graphicObject.setVector("ambientColor", ambientColor);
@@ -165,18 +163,22 @@ public class Main {
             if (Keyboard.getEventKeyState()) {
                 int input = Keyboard.getEventKey();
                 switch (input) {
-                    case Keyboard.KEY_R:
-                    case Keyboard.KEY_L:
-                    case Keyboard.KEY_RIGHT:
                     case Keyboard.KEY_LEFT:
-                        currentRotation = RotationType.Y;
+                    case Keyboard.KEY_L:
+                        currentRotation = RotationType.LEFT;
+                        break;
+                    case Keyboard.KEY_R:
+                    case Keyboard.KEY_RIGHT:
+                        currentRotation = RotationType.RIGHT;
                         break;
 
                     case Keyboard.KEY_C:
+                    case Keyboard.KEY_UP:
+                        currentRotation = RotationType.UP;
+                        break;
                     case Keyboard.KEY_B:
                     case Keyboard.KEY_DOWN:
-                    case Keyboard.KEY_UP:
-                        currentRotation = RotationType.X;
+                        currentRotation = RotationType.DOWN;
                         break;
                     case Keyboard.KEY_O:
                         currentProjection = ProjectionType.O;
@@ -201,10 +203,11 @@ public class Main {
         return currentProjection;
     }
 
+
     private Matrix4f getRotationMatrixX(float angle) {
 
-        float c = FastMath.cos(currentAngle);
-        float s = FastMath.sin(currentAngle);
+        float c = FastMath.cos(angle);
+        float s = FastMath.sin(angle);
 
         Matrix4f rotationMatrixX = new Matrix4f();
 
@@ -219,8 +222,8 @@ public class Main {
 
     private Matrix4f getRotationMatrixY(float angle) {
 
-        float c = FastMath.cos(currentAngle);
-        float s = FastMath.sin(currentAngle);
+        float c = FastMath.cos(angle);
+        float s = FastMath.sin(angle);
 
         Matrix4f rotationMatrixY = new Matrix4f();
 
@@ -239,11 +242,17 @@ public class Main {
         Matrix4f rotationMatrix;
 
         switch (currentRotation) {
-            case X:
+            case UP:
+                rotationMatrix = getRotationMatrixX(-currentAngle);
+                break;
+            case DOWN:
                 rotationMatrix = getRotationMatrixX(currentAngle);
                 break;
-            case Y:
+            case LEFT:
                 rotationMatrix = getRotationMatrixY(currentAngle);
+                break;
+            case RIGHT:
+                rotationMatrix = getRotationMatrixY(-currentAngle);
                 break;
             default:
                 rotationMatrix = getRotationMatrixX(currentAngle);
