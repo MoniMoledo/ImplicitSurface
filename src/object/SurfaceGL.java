@@ -92,7 +92,7 @@ public class SurfaceGL extends Surface implements ObjectGL {
 
         // do the heavy lifting of loading, compiling and linking
         // the two shaders into a usable shader program
-        shader.init("shaders/phong.vert", "shaders/phong.frag");
+        shader.init("src/shaders/phong.vert", "src/shaders/phong.frag");
 
         // tell OpenGL to use the shader
         GL20.glUseProgram(shader.getProgramId());
@@ -151,17 +151,18 @@ public class SurfaceGL extends Surface implements ObjectGL {
     @Override
     public void fillVBOs() {
 
-        ntriangles = positions.size();
+        ntriangles = positions.size() / 3;
         // convert vertex array to buffer
-        positionBuffer = BufferUtils.createFloatBuffer(4 * 3 * positions.size()); //4(coordinates)*3(vertices)*12(triangles)
+        positionBuffer = BufferUtils.createFloatBuffer(4 * 3 * ntriangles); //4(coordinates)*3(vertices)*12(triangles)
         // convert vertex array to buffer
-        normalBuffer = BufferUtils.createFloatBuffer(4 * 3 * positions.size()); //4(coordinates)*3(vertices)*12(triangles)
+        normalBuffer = BufferUtils.createFloatBuffer( 4 * 3 * ntriangles); //4(coordinates)*3(vertices)*12(triangles)
         // convert color array to buffer
-        colorBuffer = BufferUtils.createFloatBuffer(4 * 3 * positions.size()); //4(coordinates)*3(vertices)*12(triangles)
+        colorBuffer = BufferUtils.createFloatBuffer( 4 * 3 * ntriangles); //4(coordinates)*3(vertices)*12(triangles)
 
         for (int i = 0; i < positions.size(); i++) {
             positions.get(i).store(positionBuffer);
-            positions.get(i).store(normalBuffer);
+            normal.get(i).store(normalBuffer);
+            //positions.get(i).store(normalBuffer);
             colors.get(i).store(colorBuffer);
         }
 

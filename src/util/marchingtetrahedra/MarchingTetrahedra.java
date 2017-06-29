@@ -8,6 +8,7 @@ package util.marchingtetrahedra;
 import object.Surface;
 import java.util.HashMap;
 import java.util.Map;
+import object.SurfaceGL;
 import util.math.Vector3f;
 
 /**
@@ -53,6 +54,7 @@ public class MarchingTetrahedra {
                 for (int k = 0; k < resolution; ++k) {
                     float z1 = (float) k / resolution * zrange + zMin;
                     float z2 = (float) (k + 1) / resolution * zrange + zMin;
+
 
                     /*
                  Coordinates:
@@ -169,158 +171,216 @@ public class MarchingTetrahedra {
            *
            2
          */
-        StringBuilder pointInside = new StringBuilder(4);
+//        StringBuilder pointInside = new StringBuilder(4);
+//        for (int i = 0; i < 4; ++i) {
+//            if (tetrahedra[i].isIn) {
+//                pointInside.append(i);
+//            }
+//        }
+        char index = 0;
         for (int i = 0; i < 4; ++i) {
             if (tetrahedra[i].isIn) {
-                pointInside.append(i);
+                index |= (1 << i);
             }
         }
 
-        switch (pointInside.toString()) {
+        switch (index) {
 
             // we don't do anything if everyone is inside or outside
-            case "":
-            case "0123":
+//            case "":
+//            case "0123":
+            case 0x00:
+            case 0x0F:
                 break;
 
             // only vert 0 is inside
-            case "0":
-                surface.addVertex(getMidVertex(tetrahedra[0], tetrahedra[1]));
-                surface.addVertex(getMidVertex(tetrahedra[0], tetrahedra[3]));
-                surface.addVertex(getMidVertex(tetrahedra[0], tetrahedra[2]));
+            //case "0":
+            case 0x01:
+                surface.addVertex(drawVert(surface, tetrahedra[0], tetrahedra[1]));
+                surface.addVertex(drawVert(surface, tetrahedra[0], tetrahedra[3]));
+                surface.addVertex(drawVert(surface, tetrahedra[0], tetrahedra[2]));
                 break;
 
             // only vert 1 is inside
-            case "1":
-                surface.addVertex(getMidVertex(tetrahedra[1], tetrahedra[0]));
-                surface.addVertex(getMidVertex(tetrahedra[1], tetrahedra[2]));
-                surface.addVertex(getMidVertex(tetrahedra[1], tetrahedra[3]));
+            //case "1":
+            // only vert 1 is inside
+            case 0x02:
+                surface.addVertex(drawVert(surface, tetrahedra[1], tetrahedra[0]));
+                surface.addVertex(drawVert(surface, tetrahedra[1], tetrahedra[2]));
+                surface.addVertex(drawVert(surface, tetrahedra[1], tetrahedra[3]));
                 break;
 
             // only vert 2 is inside
-            case "2":
-                surface.addVertex(getMidVertex(tetrahedra[2], tetrahedra[0]));
-                surface.addVertex(getMidVertex(tetrahedra[2], tetrahedra[3]));
-                surface.addVertex(getMidVertex(tetrahedra[2], tetrahedra[1]));
+            //case "2":
+            // only vert 2 is inside
+            case 0x04:
+                surface.addVertex(drawVert(surface, tetrahedra[2], tetrahedra[0]));
+                surface.addVertex(drawVert(surface, tetrahedra[2], tetrahedra[3]));
+                surface.addVertex(drawVert(surface, tetrahedra[2], tetrahedra[1]));
                 break;
 
             // only vert 3 is inside
-            case "3":
-                surface.addVertex(getMidVertex(tetrahedra[3], tetrahedra[0]));
-                surface.addVertex(getMidVertex(tetrahedra[3], tetrahedra[1]));
-                surface.addVertex(getMidVertex(tetrahedra[3], tetrahedra[2]));
-
+            //case "3":
+            // only vert 3 is inside
+            case 0x08:
+                surface.addVertex(drawVert(surface, tetrahedra[3], tetrahedra[1]));
+                surface.addVertex(drawVert(surface, tetrahedra[3], tetrahedra[2]));
+                surface.addVertex(drawVert(surface, tetrahedra[3], tetrahedra[0]));
                 break;
 
             // verts 0, 1 are inside
-            case "01":
-                surface.addVertex(getMidVertex(tetrahedra[3], tetrahedra[0]));
-                surface.addVertex(getMidVertex(tetrahedra[2], tetrahedra[0]));
-                surface.addVertex(getMidVertex(tetrahedra[1], tetrahedra[3]));
+            //case "01":
+            // verts 0, 1 are inside
+            case 0x03:
 
-                surface.addVertex(getMidVertex(tetrahedra[2], tetrahedra[0]));
-                surface.addVertex(getMidVertex(tetrahedra[2], tetrahedra[1]));
-                surface.addVertex(getMidVertex(tetrahedra[1], tetrahedra[3]));
+                surface.addVertex(drawVert(surface, tetrahedra[3], tetrahedra[0]));
+                surface.addVertex(drawVert(surface, tetrahedra[2], tetrahedra[0]));
+                surface.addVertex(drawVert(surface, tetrahedra[1], tetrahedra[3]));
+
+                surface.addVertex(drawVert(surface, tetrahedra[2], tetrahedra[0]));
+                surface.addVertex(drawVert(surface, tetrahedra[2], tetrahedra[1]));
+                surface.addVertex(drawVert(surface, tetrahedra[1], tetrahedra[3]));
                 break;
 
             // verts 0, 2 are inside
-            case "02":
-                surface.addVertex(getMidVertex(tetrahedra[3], tetrahedra[0]));
-                surface.addVertex(getMidVertex(tetrahedra[1], tetrahedra[2]));
-                surface.addVertex(getMidVertex(tetrahedra[1], tetrahedra[0]));
+            //case "02":
+            // verts 0, 2 are inside
+            case 0x05:
+                surface.addVertex(drawVert(surface, tetrahedra[3], tetrahedra[0]));
+                surface.addVertex(drawVert(surface, tetrahedra[1], tetrahedra[2]));
+                surface.addVertex(drawVert(surface, tetrahedra[1], tetrahedra[0]));
 
-                surface.addVertex(getMidVertex(tetrahedra[1], tetrahedra[2]));
-                surface.addVertex(getMidVertex(tetrahedra[3], tetrahedra[0]));
-                surface.addVertex(getMidVertex(tetrahedra[2], tetrahedra[3]));
+                surface.addVertex(drawVert(surface, tetrahedra[1], tetrahedra[2]));
+                surface.addVertex(drawVert(surface, tetrahedra[3], tetrahedra[0]));
+                surface.addVertex(drawVert(surface, tetrahedra[2], tetrahedra[3]));
                 break;
 
             // verts 0, 3 are inside
-            case "03":
-                surface.addVertex(getMidVertex(tetrahedra[0], tetrahedra[1]));
-                surface.addVertex(getMidVertex(tetrahedra[1], tetrahedra[3]));
-                surface.addVertex(getMidVertex(tetrahedra[0], tetrahedra[2]));
+            //case "03":
+            // verts 0, 3 are inside
+            case 0x09:
+                surface.addVertex(drawVert(surface, tetrahedra[0], tetrahedra[1]));
+                surface.addVertex(drawVert(surface, tetrahedra[1], tetrahedra[3]));
+                surface.addVertex(drawVert(surface, tetrahedra[0], tetrahedra[2]));
 
-                surface.addVertex(getMidVertex(tetrahedra[1], tetrahedra[3]));
-                surface.addVertex(getMidVertex(tetrahedra[3], tetrahedra[2]));
-                surface.addVertex(getMidVertex(tetrahedra[0], tetrahedra[2]));
+                surface.addVertex(drawVert(surface, tetrahedra[1], tetrahedra[3]));
+                surface.addVertex(drawVert(surface, tetrahedra[3], tetrahedra[2]));
+                surface.addVertex(drawVert(surface, tetrahedra[0], tetrahedra[2]));
                 break;
 
             // verts 1, 2 are inside
-            case "12":
-                surface.addVertex(getMidVertex(tetrahedra[0], tetrahedra[1]));
-                surface.addVertex(getMidVertex(tetrahedra[0], tetrahedra[2]));
-                surface.addVertex(getMidVertex(tetrahedra[1], tetrahedra[3]));
+            //case "12":
+            // verts 1, 2 are inside
+            case 0x06:
+                surface.addVertex(drawVert(surface, tetrahedra[0], tetrahedra[1]));
+                surface.addVertex(drawVert(surface, tetrahedra[0], tetrahedra[2]));
+                surface.addVertex(drawVert(surface, tetrahedra[1], tetrahedra[3]));
 
-                surface.addVertex(getMidVertex(tetrahedra[1], tetrahedra[3]));
-                surface.addVertex(getMidVertex(tetrahedra[0], tetrahedra[2]));
-                surface.addVertex(getMidVertex(tetrahedra[3], tetrahedra[2]));
+                surface.addVertex(drawVert(surface, tetrahedra[1], tetrahedra[3]));
+                surface.addVertex(drawVert(surface, tetrahedra[0], tetrahedra[2]));
+                surface.addVertex(drawVert(surface, tetrahedra[3], tetrahedra[2]));
                 break;
 
             // verts 2, 3 are inside
-            case "23":
-                surface.addVertex(getMidVertex(tetrahedra[1], tetrahedra[3]));
-                surface.addVertex(getMidVertex(tetrahedra[2], tetrahedra[0]));
-                surface.addVertex(getMidVertex(tetrahedra[3], tetrahedra[0]));
+            //case "23":
+            // verts 2, 3 are inside
+            case 0x0C:
+                surface.addVertex(drawVert(surface, tetrahedra[1], tetrahedra[3]));
+                surface.addVertex(drawVert(surface, tetrahedra[2], tetrahedra[0]));
+                surface.addVertex(drawVert(surface, tetrahedra[3], tetrahedra[0]));
 
-                surface.addVertex(getMidVertex(tetrahedra[2], tetrahedra[0]));
-                surface.addVertex(getMidVertex(tetrahedra[1], tetrahedra[3]));
-                surface.addVertex(getMidVertex(tetrahedra[2], tetrahedra[1]));
+                surface.addVertex(drawVert(surface, tetrahedra[2], tetrahedra[0]));
+                surface.addVertex(drawVert(surface, tetrahedra[1], tetrahedra[3]));
+                surface.addVertex(drawVert(surface, tetrahedra[2], tetrahedra[1]));
                 break;
 
             // verts 1, 3 are inside
-            case "13":
-                surface.addVertex(getMidVertex(tetrahedra[3], tetrahedra[0]));
-                surface.addVertex(getMidVertex(tetrahedra[1], tetrahedra[0]));
-                surface.addVertex(getMidVertex(tetrahedra[1], tetrahedra[2]));
+            //case "13":
+            // verts 1, 3 are inside
+            case 0x0A:
+                surface.addVertex(drawVert(surface, tetrahedra[3], tetrahedra[0]));
+                surface.addVertex(drawVert(surface, tetrahedra[1], tetrahedra[0]));
+                surface.addVertex(drawVert(surface, tetrahedra[1], tetrahedra[2]));
 
-                surface.addVertex(getMidVertex(tetrahedra[1], tetrahedra[2]));
-                surface.addVertex(getMidVertex(tetrahedra[2], tetrahedra[3]));
-                surface.addVertex(getMidVertex(tetrahedra[3], tetrahedra[0]));
+                surface.addVertex(drawVert(surface, tetrahedra[1], tetrahedra[2]));
+                surface.addVertex(drawVert(surface, tetrahedra[2], tetrahedra[3]));
+                surface.addVertex(drawVert(surface, tetrahedra[3], tetrahedra[0]));
                 break;
 
             // verts 0, 1, 2 are inside
-            case "012":
-                surface.addVertex(getMidVertex(tetrahedra[3], tetrahedra[0]));
-                surface.addVertex(getMidVertex(tetrahedra[3], tetrahedra[2]));
-                surface.addVertex(getMidVertex(tetrahedra[3], tetrahedra[1]));
+            //case "012":
+            // verts 0, 1, 2 are inside
+            case 0x07:
+                surface.addVertex(drawVert(surface, tetrahedra[3], tetrahedra[0]));
+                surface.addVertex(drawVert(surface, tetrahedra[3], tetrahedra[2]));
+                surface.addVertex(drawVert(surface, tetrahedra[3], tetrahedra[1]));
                 break;
 
             // verts 0, 1, 3 are inside
-            case "013":
-                surface.addVertex(getMidVertex(tetrahedra[2], tetrahedra[1]));
-                surface.addVertex(getMidVertex(tetrahedra[2], tetrahedra[3]));
-                surface.addVertex(getMidVertex(tetrahedra[2], tetrahedra[0]));
+            //case "013":
+            // verts 0, 1, 3 are inside
+            case 0x0B:
+                surface.addVertex(drawVert(surface, tetrahedra[2], tetrahedra[1]));
+                surface.addVertex(drawVert(surface, tetrahedra[2], tetrahedra[3]));
+                surface.addVertex(drawVert(surface, tetrahedra[2], tetrahedra[0]));
                 break;
 
             // verts 0, 2, 3 are inside
-            case "023":
-                surface.addVertex(getMidVertex(tetrahedra[1], tetrahedra[0]));
-                surface.addVertex(getMidVertex(tetrahedra[1], tetrahedra[3]));
-                surface.addVertex(getMidVertex(tetrahedra[1], tetrahedra[2]));
+            //case "023":
+            // verts 0, 2, 3 are inside
+            case 0x0D:
+
+                surface.addVertex(drawVert(surface, tetrahedra[1], tetrahedra[0]));
+                surface.addVertex(drawVert(surface, tetrahedra[1], tetrahedra[3]));
+                surface.addVertex(drawVert(surface, tetrahedra[1], tetrahedra[2]));
                 break;
 
             // verts 1, 2, 3 are inside
-            case "123":
-                surface.addVertex(getMidVertex(tetrahedra[0], tetrahedra[1]));
-                surface.addVertex(getMidVertex(tetrahedra[0], tetrahedra[2]));
-                surface.addVertex(getMidVertex(tetrahedra[0], tetrahedra[3]));
+            //case "123":
+            // verts 1, 2, 3 are inside
+            case 0x0E:
+
+                surface.addVertex(drawVert(surface, tetrahedra[0], tetrahedra[1]));
+                surface.addVertex(drawVert(surface, tetrahedra[0], tetrahedra[2]));
+                surface.addVertex(drawVert(surface, tetrahedra[0], tetrahedra[3]));
                 break;
 
-            // what is this I don't even
             default:
                 throw new Exception("Wrong indexes");
         }
 
     }
 
-    private static Vector3f getMidVertex(GridPoint p1, GridPoint p2) {
+//    private static Vector3f getMidPoint(surface, GridPoint p1, GridPoint p2) {
+//
+//        float x, y, z;
+//
+//        x = (p1.vertex.x + p2.vertex.x) / 2.0f;
+//        y = (p1.vertex.y + p2.vertex.y) / 2.0f;
+//        z = (p1.vertex.z + p2.vertex.z) / 2.0f;
+//
+//        return new Vector3f(x, y, z);
+//    }
 
+    private static Vector3f drawVert(Surface surface, GridPoint p1, GridPoint p2) {
+        float v1 = surface.valueAt(p1.vertex.x, p1.vertex.y, p1.vertex.z);
+        float v2 = surface.valueAt(p2.vertex.x, p2.vertex.y, p2.vertex.z);
+
+        float isolevel = 0.001f;
         float x, y, z;
 
-        x = (p1.vertex.x + p2.vertex.x) / 2.0f;
-        y = (p1.vertex.y + p2.vertex.y) / 2.0f;
-        z = (p1.vertex.z + p2.vertex.z) / 2.0f;
+        if (v2 == v1) {
+            x = (p1.vertex.x + p2.vertex.x) / 2.0f;
+            y = (p1.vertex.y + p2.vertex.y) / 2.0f;
+            z = (p1.vertex.z + p2.vertex.z) / 2.0f;
+        } else {
+            float interp = (isolevel - v1) / (v2 - v1);
+            float oneMinusInterp = 1 - interp;
 
+            x = p1.vertex.x * oneMinusInterp + p2.vertex.x * interp;
+            y = p1.vertex.y * oneMinusInterp + p2.vertex.y * interp;
+            z = p1.vertex.z * oneMinusInterp + p2.vertex.z * interp;
+        }
         return new Vector3f(x, y, z);
     }
 }
