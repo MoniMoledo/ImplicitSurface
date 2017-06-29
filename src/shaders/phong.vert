@@ -19,35 +19,19 @@ uniform float kA, kD, kS, sN;
 //ilumination variables dor frag shader
 smooth out vec4 theColor;
 smooth out vec4 newNormal;
-smooth out vec4 positionWorld;
+smooth out vec3 lightDir;
 smooth out vec3 v;
-
-
-//light parameters for frag shader
-smooth out vec3 lightPosF;
-smooth out vec3 ambientColorF; 
-smooth out vec3 diffuseColorF;
-smooth out vec3 speclarColorF;
-smooth out float kAF, kDF, kSF, sNF;
 
 void main()
 {
-    lightPosF = lightPos;
-    ambientColorF = ambientColor; 
-    diffuseColorF = diffuseColor;
-    speclarColorF = speclarColor;   
-    kAF = kA;
-    kDF = kD;
-    kSF = kS;
-    sNF = sN;
-
     mat4 modelView = viewmatrix * modelmatrix;
     mat4 normalMatrix = transpose(inverse(modelView));
 
     // final vertex position
     gl_Position = projection * modelView * position;
 
-    positionWorld = modelmatrix * position;
+    vec4 positionWorld = modelmatrix * position;
+    lightDir = normalize(lightPos - positionWorld.xyz);
     newNormal = normalize(normalMatrix * normal);
 
     //specular
