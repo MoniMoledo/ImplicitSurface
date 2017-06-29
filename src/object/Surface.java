@@ -44,24 +44,23 @@ public class Surface {
     }
 
     public float valueAt(float x, float y, float z) {
-        float r = 0.6f;
         double a = 1;
-        double b = 2;
-        double c = 1;
-        double d = 2;
-        double e = 1;
-        double f = 2;
+        double b = 1;
+        double c = -1;
+        
+        double xPo = 2;
+        double yPo = 2;
+        double zPo = 2;
         //1, 2, -1, 2, 1, 2, 300
-        return (float) (((Math.pow((double) x, (double) b)) * a)
-                + ((Math.pow((double) y, (double) d)) * c)
-                + ((Math.pow((double) z, (double) f)) * e)) - r*r;
+        return (float) (((Math.pow((double) x, xPo)) * a)
+                + ((Math.pow((double) y, yPo)) * b)
+                + ((Math.pow((double) z, zPo)) * c));
     }
 
     public boolean isIn(float x, float y, float z) {
 
-        float epsilon = 0.001f;
+        float epsilon = 0.01f;
 
-        float r = 0.6f;
         float value = valueAt(x, y, z);
         if (value <= epsilon) {
             return true;

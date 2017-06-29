@@ -23,121 +23,37 @@ public class MarchingTetrahedra {
             float zMin, float zMax,
             int resolution) throws Exception { // resolution indicates # of cubes
 
-        int pointsPerEdge = resolution + 1; // indicates the # of points per side
+        float r = 2.0f / resolution;
+        System.out.println(r);
 
-        float xrange = xMax - xMin;
-        float yrange = yMax - yMin;
-        float zrange = zMax - zMin;
+        Vector3f v0 = new Vector3f(-1.0f, -1.0f, -1.0f);
 
-        Map grid = new HashMap<>();
-        for (int i = 0; i <= resolution; ++i) {
-            float x = (float) i / resolution * xrange + xMin;
-            for (int j = 0; j <= resolution; ++j) {
-                float y = (float) j / resolution * yrange + yMin;
-                for (int k = 0; k <= resolution; ++k) {
-                    float z = (float) k / resolution * zrange + zMin;
-                    boolean value = surface.isIn(x, y, z);
-                    StringBuilder str = new StringBuilder(0);
-                    str.append(i);
-                    str.append(j);
-                    str.append(k);
-                    grid.put(str.toString(), value);
-                }
-            }
-        }
-        for (int i = 0; i < resolution; ++i) {
-            float x1 = (float) i / resolution * xrange + xMin;
-            float x2 = (float) (i + 1) / resolution * xrange + xMin;
-            for (int j = 0; j < resolution; ++j) {
-                float y1 = (float) j / resolution * yrange + yMin;
-                float y2 = (float) (j + 1) / resolution * yrange + yMin;
-                for (int k = 0; k < resolution; ++k) {
-                    float z1 = (float) k / resolution * zrange + zMin;
-                    float z2 = (float) (k + 1) / resolution * zrange + zMin;
+        // Cube marching = new Cube();
+        for (int i = 0; i < resolution; i++) {
+            float varX = i * r;
+            for (int j = 0; j < resolution; j++) {
+                float varY = j * r;
+                for (int k = 0; k < resolution; k++) {
+                    float varZ = k * r;
 
-
-                    /*
-                 Coordinates:
-                      z
-                      |
-                      |___ y
-                      /
-                     /
-                    x
-                 Cube layout:
-                    4-------7
-                   /|      /|
-                  / |     / |
-                 5-------6  |
-                 |  0----|--3
-                 | /     | /
-                 |/      |/
-                 1-------2
-                 Tetrahedrons are:
-                     0, 7, 3, 2
-                     0, 7, 2, 6
-                     0, 4, 6, 7
-                     0, 6, 1, 2
-                     0, 6, 1, 4
-                     5, 6, 1, 4
-                     */
-                    StringBuilder str = new StringBuilder(0);
-                    str.append(i);
-                    str.append(j);
-                    str.append(k);
-                    String key1 = str.toString();
-
-                    str = new StringBuilder(0);
-                    str.append(i + 1);
-                    str.append(j);
-                    str.append(k);
-                    String key2 = str.toString();
-
-                    str = new StringBuilder(0);
-                    str.append(i + 1);
-                    str.append(j + 1);
-                    str.append(k);
-                    String key3 = str.toString();
-
-                    str = new StringBuilder(0);
-                    str.append(i);
-                    str.append(j + 1);
-                    str.append(k);
-                    String key4 = str.toString();
-
-                    str = new StringBuilder(0);
-                    str.append(i);
-                    str.append(j);
-                    str.append(k + 1);
-                    String key5 = str.toString();
-
-                    str = new StringBuilder(0);
-                    str.append(i + 1);
-                    str.append(j);
-                    str.append(k + 1);
-                    String key6 = str.toString();
-
-                    str = new StringBuilder(0);
-                    str.append(i + 1);
-                    str.append(j + 1);
-                    str.append(k + 1);
-                    String key7 = str.toString();
-
-                    str = new StringBuilder(0);
-                    str.append(i);
-                    str.append(j + 1);
-                    str.append(k + 1);
-                    String key8 = str.toString();
+                    Vector3f v = new Vector3f(v0.x + varX, v0.y + varY, v0.z + varZ);
+                    Vector3f v1 = new Vector3f(v.x, v.y, v.z + r);
+                    Vector3f v2 = new Vector3f(v.x + r, v.y, v.z + r);
+                    Vector3f v3 = new Vector3f(v.x + r, v.y, v.z);
+                    Vector3f v4 = new Vector3f(v.x, v.y + r, v.z);
+                    Vector3f v5 = new Vector3f(v.x, v.y + r, v.z + r);
+                    Vector3f v6 = new Vector3f(v.x + r, v.y + r, v.z + r);
+                    Vector3f v7 = new Vector3f(v.x + r, v.y + r, v.z);
 
                     GridPoint[] cube = new GridPoint[]{
-                        new GridPoint(x1, y1, z1, (boolean) grid.get(key1)),
-                        new GridPoint(x2, y1, z1, (boolean) grid.get(key2)),
-                        new GridPoint(x2, y2, z1, (boolean) grid.get(key3)),
-                        new GridPoint(x1, y2, z1, (boolean) grid.get(key4)),
-                        new GridPoint(x1, y1, z2, (boolean) grid.get(key5)),
-                        new GridPoint(x2, y1, z2, (boolean) grid.get(key6)),
-                        new GridPoint(x2, y2, z2, (boolean) grid.get(key7)),
-                        new GridPoint(x1, y2, z2, (boolean) grid.get(key8))
+                        new GridPoint(v.x,  v.y,  v.z, surface.isIn(v.x,  v.y,  v.z)),
+                        new GridPoint(v1.x, v1.y, v1.z,surface.isIn(v1.x,  v1.y,  v1.z)),
+                        new GridPoint(v2.x, v2.y, v2.z, surface.isIn(v2.x,  v2.y,  v2.z)),
+                        new GridPoint(v3.x, v3.y, v3.z, surface.isIn(v3.x,  v3.y,  v3.z)),
+                        new GridPoint(v4.x, v4.y, v4.z, surface.isIn(v4.x,  v4.y,  v4.z)),
+                        new GridPoint(v5.x, v5.y, v5.z, surface.isIn(v5.x,  v5.y,  v5.z)),
+                        new GridPoint(v6.x, v6.y, v6.z, surface.isIn(v6.x,  v6.y,  v6.z)),
+                        new GridPoint(v7.x, v7.y, v7.z, surface.isIn(v7.x,  v7.y,  v7.z))
                     };
 
                     GridPoint[][] tetrahedron = new GridPoint[][]{
@@ -361,12 +277,11 @@ public class MarchingTetrahedra {
 //
 //        return new Vector3f(x, y, z);
 //    }
-
     private static Vector3f drawVert(Surface surface, GridPoint p1, GridPoint p2) {
         float v1 = surface.valueAt(p1.vertex.x, p1.vertex.y, p1.vertex.z);
         float v2 = surface.valueAt(p2.vertex.x, p2.vertex.y, p2.vertex.z);
 
-        float isolevel = 0.001f;
+        float isolevel = 0.01f;
         float x, y, z;
 
         if (v2 == v1) {

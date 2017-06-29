@@ -103,7 +103,7 @@ public class Main {
     public void run() throws Exception {
         // Creates the vertex array object. 
         // Must be performed before shaders compilation.
-        MarchingTetrahedra.generateTetrahedron(graphicObject, -1, 1, -1, 1, -1, 1, 120);
+        MarchingTetrahedra.generateTetrahedron(graphicObject, -1, 1, -1, 1, -1, 1, 100);
         graphicObject.fillVAOs();
         graphicObject.loadShaders();
 
