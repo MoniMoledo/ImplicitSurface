@@ -34,8 +34,8 @@ public class SurfaceGL extends Surface implements ObjectGL {
     private int ntriangles;
 
     //Constructor
-    public SurfaceGL() {
-        super();
+    public SurfaceGL(double a, double b, double c, double xPo, double yPo, double zPo, float isolevel) {
+        super(a, b, c, xPo, yPo, zPo, isolevel);
     }
 
     @Override
@@ -155,9 +155,9 @@ public class SurfaceGL extends Surface implements ObjectGL {
         // convert vertex array to buffer
         positionBuffer = BufferUtils.createFloatBuffer(4 * 3 * ntriangles); //4(coordinates)*3(vertices)*12(triangles)
         // convert vertex array to buffer
-        normalBuffer = BufferUtils.createFloatBuffer( 4 * 3 * ntriangles); //4(coordinates)*3(vertices)*12(triangles)
+        normalBuffer = BufferUtils.createFloatBuffer(4 * 3 * ntriangles); //4(coordinates)*3(vertices)*12(triangles)
         // convert color array to buffer
-        colorBuffer = BufferUtils.createFloatBuffer( 4 * 3 * ntriangles); //4(coordinates)*3(vertices)*12(triangles)
+        colorBuffer = BufferUtils.createFloatBuffer(4 * 3 * ntriangles); //4(coordinates)*3(vertices)*12(triangles)
 
         for (int i = 0; i < positions.size(); i++) {
             positions.get(i).store(positionBuffer);

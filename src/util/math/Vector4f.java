@@ -13,6 +13,7 @@ import java.nio.FloatBuffer;
  * @author João Vicente P. Reis Filho
  */
 public final class Vector4f {
+
     public float x;
     public float y;
     public float z;
@@ -39,9 +40,10 @@ public final class Vector4f {
      * Creates a <code>Vector4f</code> from a <code>Vector3f</code> and a
      * w-coordinate.
      *
-     * <p> Note that the w-coordinate should be set to zero if <code>vec</code>
-     * is a direction vector. On the other hand, if <code>vec</code> is a point
-     * then the w-coordinate should probably be set to <code>1.0f</code>.
+     * <p>
+     * Note that the w-coordinate should be set to zero if <code>vec</code> is a
+     * direction vector. On the other hand, if <code>vec</code> is a point then
+     * the w-coordinate should probably be set to <code>1.0f</code>.
      *
      * @param vec a <code>Vector3f</code>
      * @param w the w-coordinate
@@ -73,7 +75,7 @@ public final class Vector4f {
     }
 
     public float lengthSquared() {
-        return (x*x + y*y + z*z + w*w);
+        return (x * x + y * y + z * z + w * w);
     }
 
     public void add(Vector4f vec) {

@@ -17,11 +17,12 @@ import util.projection.Projection;
 
 public class Main {
 
-    // Creates a new cube
-    //private final CubeGL graphicObject = new CubeGL();
-    //Creates a new Piramide
-    //private final PiramideGL graphicObject = new PiramideGL();
-    private final SurfaceGL graphicObject = new SurfaceGL();
+    //sphere = (1, 1, 1, 2, 2, 2, 0.5f);
+    //cone = 1, 1, -1, 2, 2, 2, 0.0f
+    //paraboloide = 1, 1, -1, 2, 2, 1, 0.0f
+    //cilinder = 1, 1, 0, 2, 2, 1, 0.5f
+    //sela = 1, -1, -1, 2, 2, 1, 0.0f
+    private final SurfaceGL graphicObject = new SurfaceGL(1, 1, 1, 2, 2, 2, 0.5f);
 
     // Animation:
     private float currentAngle = 0.0f;
@@ -103,7 +104,7 @@ public class Main {
     public void run() throws Exception {
         // Creates the vertex array object. 
         // Must be performed before shaders compilation.
-        MarchingTetrahedra.generateTetrahedron(graphicObject, -1, 1, -1, 1, -1, 1, 100);
+        MarchingTetrahedra.generateTetrahedron(graphicObject, 100);
         graphicObject.fillVAOs();
         graphicObject.loadShaders();
 
@@ -191,19 +192,6 @@ public class Main {
         }
     }
 
-    private ProjectionType getProjectionInput() {
-        // if (Keyboard.next()) {
-        if (Keyboard.getEventKeyState()) {
-            int input = Keyboard.getEventKey();
-            switch (input) {
-
-            }
-        }
-        // }
-        return currentProjection;
-    }
-
-
     private Matrix4f getRotationMatrixX(float angle) {
 
         float c = FastMath.cos(angle);
@@ -243,16 +231,16 @@ public class Main {
 
         switch (currentRotation) {
             case UP:
-                rotationMatrix = getRotationMatrixX(-currentAngle);
-                break;
-            case DOWN:
                 rotationMatrix = getRotationMatrixX(currentAngle);
                 break;
+            case DOWN:
+                rotationMatrix = getRotationMatrixX(-currentAngle);
+                break;
             case LEFT:
-                rotationMatrix = getRotationMatrixY(currentAngle);
+                rotationMatrix = getRotationMatrixY(-currentAngle);
                 break;
             case RIGHT:
-                rotationMatrix = getRotationMatrixY(-currentAngle);
+                rotationMatrix = getRotationMatrixY(currentAngle);
                 break;
             default:
                 rotationMatrix = getRotationMatrixX(currentAngle);

@@ -90,7 +90,7 @@ public class PiramideGL extends Piramide implements ObjectGL {
 
         // do the heavy lifting of loading, compiling and linking
         // the two shaders into a usable shader program
-        shader.init("shaders/phong.vert", "shaders/phong.frag");
+        shader.init("src/shaders/phong.vert", "src/shaders/phong.frag");
  
         // tell OpenGL to use the shader
         GL20.glUseProgram(shader.getProgramId());

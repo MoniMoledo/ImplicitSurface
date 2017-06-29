@@ -23,10 +23,6 @@ public class Projection {
         this.aspect = aspect;
         this.zNear = zNear;
         this.zFar = zFar;
-//        this.t = top;
-//        this.b = bottom;
-//        this.l = left;
-//        this.r = right;
     }
 
     public Matrix4f perspective() {
@@ -43,17 +39,17 @@ public class Projection {
         tempMatrix.m21 = 0.0f;
         tempMatrix.m31 = 0.0f;
         tempMatrix.m41 = 0.0f;
-        
+
         tempMatrix.m12 = 0.0f;
         tempMatrix.m22 = cotangent;
         tempMatrix.m32 = 0.0f;
         tempMatrix.m42 = 0.0f;
-        
+
         tempMatrix.m13 = 0.0f;
         tempMatrix.m23 = 0.0f;
         tempMatrix.m33 = -(fpn / fmn);
         tempMatrix.m43 = -2.0f * zNear * zFar / fmn;
-        
+
         tempMatrix.m14 = 0.0f;
         tempMatrix.m24 = 0.0f;
         tempMatrix.m34 = -1.0f;
@@ -72,17 +68,17 @@ public class Projection {
         tempMatrix.m21 = 0.0f;
         tempMatrix.m31 = 0.0f;
         tempMatrix.m41 = -((r + l) / (r - l));
-        
+
         tempMatrix.m12 = 0.0f;
         tempMatrix.m22 = 2 / (t - b);
         tempMatrix.m32 = 0.0f;
         tempMatrix.m42 = -((t + b) / (t - b));
-        
+
         tempMatrix.m13 = 0.0f;
         tempMatrix.m23 = 0.0f;
         tempMatrix.m33 = -2 / (fmn);
         tempMatrix.m43 = -((fpn) / (fmn));
-        
+
         tempMatrix.m14 = 0.0f;
         tempMatrix.m24 = 0.0f;
         tempMatrix.m34 = 0.0f;
